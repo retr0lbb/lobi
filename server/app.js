@@ -11,8 +11,9 @@ app.use(bodyParser.json())
 
 
 app.post("/cadastro", userController.insertUser)
-
-
+app.get("/users/", userController.findAll)
+app.delete("/users/:id", userController.deletUser)
+app.patch("/users/:id", userController.alterUser)
 
 connect(()=>{
     app.listen(port, ()=>{
