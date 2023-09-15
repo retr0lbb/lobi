@@ -1,6 +1,7 @@
 import {View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useState} from "react"
-import { Container } from "./style";
+import { Container, Inputs, LogsButton, ButtonsWrapper, NewBottons } from "./style";
+import FlatButton from "../components/utils/button/Button"
 
 
 export default function Login(){
@@ -20,44 +21,21 @@ export default function Login(){
     }
     return(
         <Container>
-            <TextInput keyboardType="email-address" 
+            <Inputs keyboardType="email-address" 
                        autoCapitalize="none"
-                       style={styles.input} 
-                       onChangeText={
-                            (text) => setEmail(text)
-                        } 
+                       onChangeText={(text) => setEmail(text)} 
                         value={email}
                         placeholder="Email"/>
-            <TextInput placeholder="Senha" 
-                       style={styles.input} 
+            <Inputs placeholder="Senha" 
                        onChangeText={(text)=> setPass(text)} 
                        value={pass} 
                        secureTextEntry/>
 
-            <Button title="Login" onPress={handleLogin} />
+
+            <ButtonsWrapper>
+                <FlatButton Text="Logar" onPress={handleLogin}/>
+                <FlatButton Text="Cadastro" onPress={handleLogin}/>
+            </ButtonsWrapper>
         </Container>
     )
 }
-
-const styles = StyleSheet.create({
-
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-      },
-      label: {
-        fontSize: 16,
-        marginBottom: 8,
-      },
-      input: {
-        width: '100%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 16,
-        paddingHorizontal: 8,
-      },
-
-})
