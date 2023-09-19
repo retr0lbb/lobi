@@ -1,7 +1,8 @@
 import {View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { useState} from "react"
+import { useState } from "react"
 import { Container, Inputs, LogsButton, ButtonsWrapper, NewBottons } from "./style";
-import FlatButton from "../components/utils/button/Button"
+import axios from "axios";
+import reactImagePicker from "react-native-image-picker";
 
 
 export default function Login(){
@@ -15,9 +16,9 @@ export default function Login(){
         if(pass == "" || email ==""){
             return console.log("insira os dados corretamente")
         }
-        console.log(pass, email)
-        setEmail('')
-        setPass("")
+        console.log(pass, email);
+        setEmail("");
+        setPass("");
     }
     return(
         <Container>
@@ -33,8 +34,7 @@ export default function Login(){
 
 
             <ButtonsWrapper>
-                <FlatButton Text="Logar" onPress={handleLogin}/>
-                <FlatButton Text="Cadastro" onPress={handleLogin}/>
+                <Button title="Logar" onPress={handleLogin}/>
             </ButtonsWrapper>
         </Container>
     )

@@ -1,5 +1,4 @@
 const User = require("../model/User")
-const mongodb = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const hashPass = (pass)=>{
@@ -67,7 +66,7 @@ exports.alterUser = async(req, res)=>{
     const id = req.params.id;
     try {
         const newData = req.body
-        const user = await User.findByIdAndUpdate(id,newData, {new: true} )
+        const user = await User.findByIdAndUpdate(id, newData, {new: true} )
 
         if(!user){
             return res.status(404).send("Usuario Não encontrado")
