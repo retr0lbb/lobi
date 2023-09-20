@@ -1,8 +1,7 @@
 import {View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useState } from "react"
 import { Container, Inputs, LogsButton, ButtonsWrapper, NewBottons } from "./style";
-import axios from "axios";
-import reactImagePicker from "react-native-image-picker";
+
 
 
 export default function Login({navigation}){

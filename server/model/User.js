@@ -1,11 +1,13 @@
-const mongoose = require('mongoose');
+class User{
+    imgName;
+    imgSrc;
+    constructor(name, email, pass){
+        this.name = name;
+        this.email = email;
+        this.pass = pass;
+    }
+}
 
-const User = mongoose.Schema({
-    name:{type: String, required: true},
-    email:{type:String, required: true, unique: true},
-    pass:{type: String, required: true},
-})
 
-
-module.exports = mongoose.model('User', User);
+module.exports = User;
 

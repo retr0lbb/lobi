@@ -1,24 +1,30 @@
-const mongoose = require('mongoose');
 
-let connection;
+const msql = require('mysql2');
 
-const connect = async(cb) =>{
-    if(connection){
-        return connection
+class Connection {
+    connectionWithDatabase;
+    constructor(){
+        this.conectar()
+        this.connectionWithDatabase
     }
-    try{
-        connection = await mongoose.connect("mongodb://127.0.0.1:27017/lobi");
-    }catch (error){
-        if(error){
-            return console.log(error);
-        }
+    conectar(){
+        this.connectionWithDatabase = msql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "",
+            database: "lobi"
+        })
+        this.connectionWithDatabase.connect((err)=>{
+            if(err){
+                return console.log(err)
+            }
+            console.log("conectado ao banco de dados")
+        })
+        console.log(this.connectionWithDatabase)
     }
-    console.log("conectado ao banco de dados");
-    cb(connection);
 }
 
-
-module.exports = connect;
+module.exports = Connection
 
 
 

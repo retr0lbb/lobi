@@ -1,7 +1,17 @@
-import {Text} from 'react-native'
+import {View, Text, TextInput, Button, StyleSheet } from "react-native";
 
+
+
+
+import axios from "axios";
+import reactImagePicker from "react-native-image-picker";
 export default function SingUp() {
     return(
-        <Text>Ola mundo</Text>
+        <View>
+            <Text>Login</Text>
+
+            <TextInput />
+            <TextInput />
+        </View>
     )
 }

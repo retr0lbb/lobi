@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const connect = require('./db/connection')
+const Connnection = require('./db/connection')
 const bodyParser = require('body-parser')
 const userController = require('./controller/userController')
 
@@ -16,9 +16,14 @@ app.get("/users/", userController.findAll);
 app.delete("/users/:id", userController.deletUser);
 app.patch("/users/:id", userController.alterUser);
 
-connect(()=>{
+try {
+    const connection = new Connnection()
     app.listen(port, ()=>{
-        console.log(`Servidor rodando na porta ${port}`)
+        console.log(`server running on port ${port}`)
     })
-}).catch(err=> console.log(err));
+} catch (error) {
+    if (error){
+        throw error
+    }
+}
 

@@ -1,4 +1,6 @@
 const User = require("../model/User")
+const Connection = require('../db/connection')
+const connection = new Connection()
 const bcrypt = require('bcrypt')
 
 const hashPass = (pass)=>{
@@ -10,12 +12,17 @@ exports.insertUser = async(req, res)=>{
     const{name, email, pass} = req.body
     
 try {
-    const user = new User({
-        name: name,
-        email: email,
-        pass:hashPass(pass)
+    const user = new User(name, email, hashPass(pass))
+    const command = "insert into usuarios (nome, email, senha) values (?, ?, ?)"
+    connection.connectionWithDatabase.query(command, [user.name, user.email, user.pass], (err, results)=>{
+        if(err){
+            console.log(err)
+            res.status(500).send("erro no mysql")
+            return;
+        }
+        console.log(results)
     })
-    await user.save()
+
     res.status(200).send("Usuario criado com sucesso")
 } catch (error) {
     if(error){
