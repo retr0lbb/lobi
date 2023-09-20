@@ -5,7 +5,7 @@ import axios from "axios";
 import reactImagePicker from "react-native-image-picker";
 
 
-export default function Login(){
+export default function Login({navigation}){
 
     const [pass, setPass] = useState('');
     const [email, setEmail] = useState('');
@@ -35,6 +35,7 @@ export default function Login(){
 
             <ButtonsWrapper>
                 <Button title="Logar" onPress={handleLogin}/>
+                <Button title="Cadastrar" onPress={() => navigation.navigate("cadastro")}/>
             </ButtonsWrapper>
         </Container>
     )
