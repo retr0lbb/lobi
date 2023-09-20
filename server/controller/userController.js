@@ -35,12 +35,16 @@ try {
 
 exports.findAll= async(req, res) =>{
     try {
-        const user = await User.find()
-        if(!user){
-            return res.status(404).send("Usuarios não encontrados");
-        }
+        
+        const command = "Select * from usuarios"
 
-        res.status(200).send(user)
+        connection.connectionWithDatabase.query(command, (err, results)=>{
+            if(err){
+                console.log(err)
+                return res.status(500).send("Erro no mysql")
+            }
+            res.status(200).send(results)
+        })
     } catch (error) {
         if(error){
             res.status(500).send("Erro ao encontrar Usuarios");

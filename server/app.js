@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 const Connnection = require('./db/connection')
 const bodyParser = require('body-parser')
@@ -6,7 +7,7 @@ const userController = require('./controller/userController')
 
 
 const port = process.env.PORT || 3001;
-
+const host = `${process.env.LOCALIP}`
 app.use(express.json());
 app.use(bodyParser.json());
 
@@ -18,8 +19,8 @@ app.patch("/users/:id", userController.alterUser);
 
 try {
     const connection = new Connnection()
-    app.listen(port, ()=>{
-        console.log(`server running on port ${port}`)
+    app.listen(port, host, ()=>{
+        console.log(`server running on 👍`)
     })
 } catch (error) {
     if (error){

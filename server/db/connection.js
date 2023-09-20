@@ -20,7 +20,6 @@ class Connection {
             }
             console.log("conectado ao banco de dados")
         })
-        console.log(this.connectionWithDatabase)
     }
 }
 
