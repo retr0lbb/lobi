@@ -109,19 +109,16 @@ exports.alterUser = async(req, res)=>{
             }
 
             const updateQueryCommand = "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id=?"
-            connection.connectionWithDatabase.query(updateQueryCommand, [updatedUserData.name,
-                                                                        updatedUserData.email,
-                                                                        hashPass(updatedUserData.pass),
-                                                                        id],
-                                                                        (UpdateErr, UpdateResults)=>{
-                                                                            if(UpdateErr){
-                                                                                console.log(UpdateErr)
-                                                                                res.status(500).send("Erro ao alterar Usuario")
-                                                                                return;
-                                                                            }
-                                                                            console.log(UpdateResults)
-                                                                            res.status(202).send("Usuario alterado com sucesso")
-                                                                        })
+            connection.connectionWithDatabase.query(updateQueryCommand, [updatedUserData.name, updatedUserData.email, hashPass(updatedUserData.pass), id],
+                (UpdateErr, UpdateResults)=>{
+                    if(UpdateErr){
+                        console.log(UpdateErr)
+                        res.status(500).send("Erro ao alterar Usuario")
+                        return;
+                    }
+                console.log(UpdateResults)
+                res.status(202).send("Usuario alterado com sucesso")
+            })
         })
         
     } catch (error) {
