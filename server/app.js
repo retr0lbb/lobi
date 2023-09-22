@@ -7,7 +7,7 @@ const userController = require('./controller/userController')
 
 
 const port = process.env.PORT || 3001;
-const host = `${process.env.LOCALIP}`
+const host = `${process.env.LOCALIP}` || "localhost";
 app.use(express.json());
 app.use(bodyParser.json());
 

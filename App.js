@@ -19,15 +19,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#f2f2f2",
-    padding: "100px",
-    paddingTop:"200px",
-    display: 'flex',
-    alignItems: "center",
-    justifyContent:"center",
-    flex: 1, // Use flex: 1 para preencher toda a tela
-  },
-});
