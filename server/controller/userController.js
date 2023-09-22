@@ -10,32 +10,47 @@ const hashPass = (pass)=>{
 
 exports.insertUser = async(req, res)=>{
     const{name, email, pass} = req.body
-    
-try {
-    const user = new User(name, email, hashPass(pass))
-    const command = "insert into usuarios (nome, email, senha) values (?, ?, ?)"
-    connection.connectionWithDatabase.query(command, [user.name, user.email, user.pass], (err, results)=>{
+
+
+    const verifyEmailAdressCommand = "SELECT COUNT(*) AS count FROM usuarios WHERE email = ?"
+    connection.connectionWithDatabase.query(verifyEmailAdressCommand, [email], async(err, results)=>{
         if(err){
             console.log(err)
-            res.status(500).send("erro no mysql")
+            res.status(500).send("erro no servidor")
             return;
         }
-        console.log(results)
-    })
+        const emailCount = results[0].count;
 
-    res.status(200).send("Usuario criado com sucesso")
-} catch (error) {
-    if(error){
-        res.status(500).send("erro no servidor")
-        console.log(error)
-        return
-    }
-}
+        if(emailCount > 0){
+            console.log("email em uso: ", email)
+            res.status(400).send(`o email: ${email} ja em uso`)
+        }else{
+            try {
+                const user = new User(name, email, hashPass(pass))
+                const command = "insert into usuarios (nome, email, senha) values (?, ?, ?)"
+                connection.connectionWithDatabase.query(command, [user.name, user.email, user.pass], (err, results)=>{
+                    if(err){
+                        console.log(err)
+                        res.status(500).send("erro no mysql")
+                        return;
+                    }
+                    console.log(results)
+                })
+            
+                res.status(200).send("Usuario criado com sucesso")
+            } catch (error) {
+                if(error){
+                    res.status(500).send("erro no servidor")
+                    console.log(error)
+                    return
+                }
+            }
+        }
+    })
 }
 
 exports.findAll= async(req, res) =>{
     try {
-        
         const command = "Select * from usuarios"
 
         connection.connectionWithDatabase.query(command, (err, results)=>{
@@ -56,37 +71,60 @@ exports.findAll= async(req, res) =>{
 
 exports.deletUser = async(req, res) =>{
     const userId = req.params.id;
-    try {
-        const user = await User.findByIdAndDelete(userId);
-        if(!user){
-            return res.status(404).send("Usuario não encontrado")
+    const deletUserById = "DELETE FROM usuarios WHERE id = ?"
+    connection.connectionWithDatabase.query(deletUserById, [userId], (err, results) =>{
+        if(err){
+            console.log(err)
+            res.status(500).send("Erro no servidor")
+            return;
         }
-        res.status(202).send("Usuario deletado com sucesso")
-        console.log(user)
-        return
-    } catch (error) {
-        if (error){
-            res.status(500).send("Erro ao deletar usuario")
-            console.log(error)
-            return
-        }
-    }
+        console.log(results);
+        res.status(202).send("Usuario deletado com sucesso");
+    })
 }
 
 exports.alterUser = async(req, res)=>{
     const id = req.params.id;
     try {
-        const newData = req.body
-        const user = await User.findByIdAndUpdate(id, newData, {new: true} )
+        const newData = req.body;
+        const requireUserString = "SELECT * FROM usuarios WHERE id = ?"
 
-        if(!user){
-            return res.status(404).send("Usuario Não encontrado")
-        }
-        res.status(200).send("Usuario alterado com sucesso: ")
+        connection.connectionWithDatabase.query(requireUserString, [id], (err, results)=>{
+            if(err){
+                console.log(err)
+                res.status(500).send("Erro no servidor")
+                return;
+            }
+            if(results.lenght === 0){
+                res.status(404).send("Usuário não encontrado");
+                return;
+            }
+            
+            const currentUserData = results[0];
+
+            const updatedUserData = {
+                name: newData.name || currentUserData.nome,
+                email: newData.email || currentUserData.email,
+                pass: newData.pass || currentUserData.senha
+            }
+
+            const updateQueryCommand = "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id=?"
+            connection.connectionWithDatabase.query(updateQueryCommand, [updatedUserData.name,
+                                                                        updatedUserData.email,
+                                                                        hashPass(updatedUserData.pass),
+                                                                        id],
+                                                                        (UpdateErr, UpdateResults)=>{
+                                                                            if(UpdateErr){
+                                                                                console.log(UpdateErr)
+                                                                                res.status(500).send("Erro ao alterar Usuario")
+                                                                                return;
+                                                                            }
+                                                                            console.log(UpdateResults)
+                                                                            res.status(202).send("Usuario alterado com sucesso")
+                                                                        })
+        })
+        
     } catch (error) {
-        if(error){
-            res.status(500).send("Erro ao atualizar usuario");
-            console.log(error)
-        }
+        
     }
 }
