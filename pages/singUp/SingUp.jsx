@@ -1,5 +1,6 @@
 import {View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
+import ButtonComplete from "../../components/shared/buttonComponent/ButtonComplete"
 import reactImagePicker from "react-native-image-picker";
 import { useState } from "react";
 export default function SingUp() {
@@ -32,7 +33,8 @@ export default function SingUp() {
             <TextInput placeholder="Email" value={email} onChangeText={(text => setEmail(text))} />
             <TextInput placeholder="Senha" value={pass} onChangeText={(text => setPass(text))} />
 
-            <Button title="Enviar" onPress={handleSingUp} />
+            <Button title="Enviar" onPress={handleSingUp}/>
+            <ButtonComplete text={"ola mundo"} onPress={handleSingUp}/>
         </View>
     )
 }
