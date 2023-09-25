@@ -69,6 +69,49 @@ exports.findAll= async(req, res) =>{
     }
 }
 
+exports.logUser = async (req, res)=>{
+
+    const {email, pass} = req.body;
+
+        const command = "SELECT * FROM usuarios WHERE email = ?"
+        connection.connectionWithDatabase.query(command, [email], (err, results) =>{
+            if(err){
+                console.log(err)
+                res.status(500).send("erro no servidor")
+            }
+            if(results.lenght <= 0){
+                return res.status(404).send("Usuario não encontrado")
+            }
+            const data = results[0]
+            const user = new User(data.nome, data.email, data.senha, data.id);
+            bcrypt.compare(pass, user.pass).then( results =>{
+                console.log(results)
+                if(results ==false){
+                    return res.status(403).send("As senhas não correspondem");
+                }
+                res.status(200).json({
+                    message: "usuario logado com sucesso",
+                    userData: {
+                        nome: user.name,
+                        email: user.email,
+                        pass: user.pass,
+                        id: user.id
+                    }
+                })
+            }).catch(err =>{
+                if(err){
+                    console.log(err)
+                    res.status(403).send("As senhas não Correspondem")
+                    return
+                }
+            })
+        })
+        
+    
+
+   
+}
+
 exports.deletUser = async(req, res) =>{
     const userId = req.params.id;
     const deletUserById = "DELETE FROM usuarios WHERE id = ?"
@@ -99,9 +142,7 @@ exports.alterUser = async(req, res)=>{
                 res.status(404).send("Usuário não encontrado");
                 return;
             }
-            
             const currentUserData = results[0];
-
             const updatedUserData = {
                 name: newData.name || currentUserData.nome,
                 email: newData.email || currentUserData.email,
@@ -122,6 +163,10 @@ exports.alterUser = async(req, res)=>{
         })
         
     } catch (error) {
-        
+        if(error){
+            res.status(500).send("erro no servidor")
+            console.log(error)
+            return
+        }
     }
 }

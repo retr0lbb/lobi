@@ -16,6 +16,7 @@ app.post("/cadastro", userController.insertUser);
 app.get("/users/", userController.findAll);
 app.delete("/users/:id", userController.deletUser);
 app.patch("/users/:id", userController.alterUser);
+app.post("/login", userController.logUser)
 
 try {
     const connection = new Connnection()

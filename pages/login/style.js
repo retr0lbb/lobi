@@ -5,7 +5,7 @@ export const Container = styled.View`
     width: 100%;
     height: 100vh;
     display: flex;
-    align-itens: center;
+    align-items: center;
     justify-content: center;
     gap: 10px;
     padding: 20px;

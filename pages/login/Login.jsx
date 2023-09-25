@@ -1,6 +1,7 @@
 import {View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useState } from "react"
 import { Container, Inputs, LogsButton, ButtonsWrapper, NewBottons } from "./style";
+import ButtonComplete from "../../components/shared/buttonComponent/ButtonComplete"
 
 
 
@@ -33,8 +34,8 @@ export default function Login({navigation}){
 
 
             <ButtonsWrapper>
-                <Button title="Logar" onPress={handleLogin}/>
-                <Button title="Cadastrar" onPress={() => navigation.navigate("cadastro")}/>
+                <ButtonComplete text="Voltar" onPress={() => navigation.navigate("home")}/>
+                <ButtonComplete text="Entrar" onPress={handleLogin}/>
             </ButtonsWrapper>
         </Container>
     )
