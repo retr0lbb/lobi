@@ -6,8 +6,6 @@ const bcrypt = require('bcrypt')
 const hashPass = (pass)=>{
     return bcrypt.hashSync(pass, 10)
 }
-
-
 exports.insertUser = async(req, res)=>{
     const{name, email, pass} = req.body
 
@@ -48,11 +46,9 @@ exports.insertUser = async(req, res)=>{
         }
     })
 }
-
 exports.findAll= async(req, res) =>{
     try {
         const command = "Select * from usuarios"
-
         connection.connectionWithDatabase.query(command, (err, results)=>{
             if(err){
                 console.log(err)
@@ -68,11 +64,27 @@ exports.findAll= async(req, res) =>{
         }
     }
 }
+exports.findOne = async (req, res)=>{
+    const id = req.params.id;
+    const command = "SELECT * FROM usuarios WHERE id = ?";
+    connection.connectionWithDatabase.query(command, id, (err, results)=>{
+        if(err){
+            console.log(err)
+            res.status(500).send("Erro no servidor")
+        }
+        if(results.lenght <= 0){
+            return res.status(404).send("Usuario não existente")
+        }
+        const userData = results[0];
+        res.status(200).json({
+            message: "Usuario encontrado",
+            userData: `${userData}`
+        })
+    })
 
+}
 exports.logUser = async (req, res)=>{
-
     const {email, pass} = req.body;
-
         const command = "SELECT * FROM usuarios WHERE email = ?"
         connection.connectionWithDatabase.query(command, [email], (err, results) =>{
             if(err){
@@ -82,8 +94,9 @@ exports.logUser = async (req, res)=>{
             if(results.lenght <= 0){
                 return res.status(404).send("Usuario não encontrado")
             }
+            try {
             const data = results[0]
-            const user = new User(data.nome, data.email, data.senha, data.id);
+            const user = new User(data.nome || "null", data.email || "null", data.senha || "null", data.id || "null");
             bcrypt.compare(pass, user.pass).then( results =>{
                 console.log(results)
                 if(results ==false){
@@ -92,7 +105,7 @@ exports.logUser = async (req, res)=>{
                 res.status(200).json({
                     message: "usuario logado com sucesso",
                     userData: {
-                        nome: user.name,
+                        nome: user.name ,
                         email: user.email,
                         pass: user.pass,
                         id: user.id
@@ -105,13 +118,15 @@ exports.logUser = async (req, res)=>{
                     return
                 }
             })
-        })
-        
-    
-
-   
-}
-
+                
+            } catch (error) {
+                if(error){
+                    res.status(500).send("erro no servidor")
+                    console.log(error)
+                }
+            }
+        })   
+    }
 exports.deletUser = async(req, res) =>{
     const userId = req.params.id;
     const deletUserById = "DELETE FROM usuarios WHERE id = ?"
@@ -125,13 +140,11 @@ exports.deletUser = async(req, res) =>{
         res.status(202).send("Usuario deletado com sucesso");
     })
 }
-
 exports.alterUser = async(req, res)=>{
     const id = req.params.id;
     try {
         const newData = req.body;
         const requireUserString = "SELECT * FROM usuarios WHERE id = ?"
-
         connection.connectionWithDatabase.query(requireUserString, [id], (err, results)=>{
             if(err){
                 console.log(err)
@@ -148,7 +161,6 @@ exports.alterUser = async(req, res)=>{
                 email: newData.email || currentUserData.email,
                 pass: newData.pass || currentUserData.senha
             }
-
             const updateQueryCommand = "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id=?"
             connection.connectionWithDatabase.query(updateQueryCommand, [updatedUserData.name, updatedUserData.email, hashPass(updatedUserData.pass), id],
                 (UpdateErr, UpdateResults)=>{
@@ -160,8 +172,7 @@ exports.alterUser = async(req, res)=>{
                 console.log(UpdateResults)
                 res.status(202).send("Usuario alterado com sucesso")
             })
-        })
-        
+        })   
     } catch (error) {
         if(error){
             res.status(500).send("erro no servidor")

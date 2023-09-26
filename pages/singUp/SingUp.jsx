@@ -19,7 +19,7 @@ export default function SingUp({navigation}) {
             email: email,
             pass: pass
         }
-        const url = "http://192.168.1.3:3001/cadastro";
+        const url = "http://192.168.1.7:3001/cadastro";
         axios.post(url, Postdata)
             .then((response)=> {
                 console.log("resposta da api: ",response)

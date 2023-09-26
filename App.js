@@ -6,6 +6,7 @@ import {createStackNavigator} from "@react-navigation/stack"
 import Login from './pages/login/Login';
 import SingUp from './pages/singUp/SingUp'
 import Home from './pages/home/Home';
+import MainPage from './pages/main/Main';
 
 const Stack = createStackNavigator()
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="home" component={Home}/>
         <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name="cadastro" component={SingUp}/>
+        <Stack.Screen name="main_page" component={MainPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
