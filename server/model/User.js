@@ -9,7 +9,5 @@ class User{
         this.id = id;
     }
 }
-
-
 module.exports = User;
 

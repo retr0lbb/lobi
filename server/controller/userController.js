@@ -66,21 +66,24 @@ exports.findAll= async(req, res) =>{
 }
 exports.findOne = async (req, res)=>{
     const id = req.params.id;
-    const command = "SELECT * FROM usuarios WHERE id = ?";
-    connection.connectionWithDatabase.query(command, id, (err, results)=>{
-        if(err){
-            console.log(err)
-            res.status(500).send("Erro no servidor")
-        }
-        if(results.lenght <= 0){
-            return res.status(404).send("Usuario não existente")
-        }
-        const userData = results[0];
-        res.status(200).json({
-            message: "Usuario encontrado",
-            userData: `${userData}`
+    try{
+        const command = "SELECT * FROM usuarios WHERE id = ?";
+        connection.connectionWithDatabase.query(command, [id], (err, results) =>{
+            if(err){
+                return res.status(500).send(`Erro no servidor: ${err}`);
+            }
+            if(results.lenght <= 0){
+                return res.status(404).send("User not finded");
+            }
+            const userData = results[0];
+            res.status(200).json(userData);
+
+            console.log(userData)
         })
-    })
+
+    }catch (err){
+
+    }
 
 }
 exports.logUser = async (req, res)=>{
